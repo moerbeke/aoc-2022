@@ -8,54 +8,62 @@
 
 import unittest
 
-import testbase
-import aocsolver
-import importlib
-
 ########################################################################
 # Test class
 ########################################################################
 
-class TestAoc01(unittest.TestCase):
+class TestAoc(unittest.TestCase):
 
     def setUp(self):
-        self.aocsolver = aocsolver.AocSolver(aoc.day, aoc.parse_input, aoc.solve_1, aoc.solve_2)
+        self.aocsolver = daysolver
         self.tc_1 = [
                 (
 """
-""", None),
-                ("", None),
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+
+""", 24000),
                 ]
         self.tc_2 = [
                 (
 """
-""", None),
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+
+""", 45000),
                 ]
 
     def tearDown(self):
         pass
 
-    @unittest.skip("not implemented yet")
     def test_solve_1(self):
         for t in self.tc_1:
             self.assertEqual(self.aocsolver.solve_1(t[0]), t[1])
 
-    @unittest.skip("not implemented yet")
     def test_solve_2(self):
         for t in self.tc_2:
             self.assertEqual(self.aocsolver.solve_2(t[0]), t[1])
-
-
-########################################################################
-# Main program
-########################################################################
-
-if __name__ == '__main__':
-    from os.path import basename
-    scriptname = basename(__file__)
-    day = scriptname.split('.')[0][-2:]
-    aocname = 'aoc' + day
-    aoc = importlib.import_module(aocname)
-    testaocname = 'TestAoc' + day
-    testaoc = globals()[testaocname]
-    testbase.run_test(testaoc)

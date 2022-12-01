@@ -6,21 +6,20 @@
 # Copyright (C) 2022 Antonio Ceballos Roa
 ########################################################################
 
+def parse_input(input_str):
+    parsed_input = input_str.strip().split('\n')
+    parsed_input.append('')
+    return parsed_input
+
 ########################################################################
 # Algorithms
 ########################################################################
 
-def parse_input(input_str):
-    global _input_str
-    _input_str = input_str.strip().split('\n')
-
-def reset():
-    return
-
-def solve_1():
+def solve_1(input_str):
+    parsed_input = parse_input(input_str)
     calories = 0
     max_calories = 0
-    for line in _input_str:
+    for line in parsed_input:
         try:
             c = int(line)
             calories += c
@@ -30,10 +29,11 @@ def solve_1():
             calories = 0
     return max_calories
 
-def solve_2():
+def solve_2(input_str):
+    parsed_input = parse_input(input_str)
     calories = 0
     elf_calories = []
-    for line in _input_str:
+    for line in parsed_input:
         try:
             c = int(line)
             calories += c
@@ -42,14 +42,3 @@ def solve_2():
             calories = 0
     max_calories = sum(list(reversed(sorted(elf_calories)))[0:3])
     return max_calories
-
-
-########################################################################
-# main
-########################################################################
-
-if __name__ == '__main__':
-    from os.path import basename
-    import aocsolver
-    scriptname = basename(__file__)
-    aocsolver.AocSolver(scriptname, parse_input, solve_1, solve_2).run()
