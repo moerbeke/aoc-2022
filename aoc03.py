@@ -23,11 +23,9 @@ def solve_1(input_str):
     for rucksack in parsed_input:
         l = len(rucksack)
         assert(l % 2 == 0)
-        compartment_1 = rucksack[:l//2]
-        compartment_2 = rucksack[l//2:]
-        set_1 = set(compartment_1)
-        set_2 = set(compartment_2)
-        items_share = set_1.intersection(set_2)
+        compartment_1 = set(rucksack[:l//2])
+        compartment_2 = set(rucksack[l//2:])
+        items_share = compartment_1.intersection(compartment_2)
         assert(len(items_share) == 1)
         for item in items_share:
             break
