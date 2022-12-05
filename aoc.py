@@ -68,7 +68,7 @@ def read_file(filename):
     """
     with open(filename, 'r') as f:
         contents = f.read()
-    return contents.strip()
+    return contents
 
 def solve_1(input_str):
     day_parse_input(input_str)
