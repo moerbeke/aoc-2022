@@ -50,6 +50,13 @@ def parse_cmd_line_args():
     args = parser.parse_args()
     return args
 
+def read_file(filename):
+    """Read a file and return its contents as a multiline string.
+    """
+    with open(filename, 'r') as f:
+        contents = f.read()
+    return contents
+
 def suite(TestClass):
     test_suite = unittest.TestSuite()
     test_suite.addTest(unittest.makeSuite(TestClass))
@@ -62,21 +69,6 @@ def run_test(day, daysolver):
     aoc_test_suite.addTest(unittest.makeSuite(testaoc.TestAoc))
     runner = unittest.TextTestRunner()
     runner.run(aoc_test_suite)
-
-def read_file(filename):
-    """Read a file and return its contents as a multiline string.
-    """
-    with open(filename, 'r') as f:
-        contents = f.read()
-    return contents
-
-def solve_1(input_str):
-    day_parse_input(input_str)
-    return day_solve_1()
-
-def solve_2(input_str):
-    day_parse_input(input_str)
-    return day_solve_2()
 
 if __name__ == '__main__':
     aoc()
