@@ -134,11 +134,11 @@ def print_tree(node, indent=0):
     - d.ext (file, size=5626152)
     - k (file, size=7214296)
     '''
-    print(' '*indent + '- ' + node.name + " (dir)")
+    verboseprint(' '*indent + '- ' + node.name + " (dir)")
     for child in node.children:
         print_tree(child, indent+2)
     for filename in node.files:
-        print(' '*(indent+2) + '- ' + filename + " (filename, size=%d)" % node.files[filename])
+        verboseprint(' '*(indent+2) + '- ' + filename + " (filename, size=%d)" % node.files[filename])
     
 ########################################################################
 # Test class

@@ -16,6 +16,7 @@ import unittest
 
 def aoc():
     global daysolver
+    global verboseprint
     year = 2022
     args = parse_cmd_line_args()
     print("\n===== AoC-%d day #%d =====\n" % (year, args.day))
@@ -23,6 +24,10 @@ def aoc():
     if args.day < 10:
         day =  '0' + day
     daysolver = importlib.import_module('aoc' + day)
+    if args.verbose:
+        daysolver.verboseprint = print
+    else:
+        daysolver.verboseprint = lambda *a, **k : None
     if args.test:
         print("======== Unit tests =======")
         run_test(day, daysolver)
@@ -44,6 +49,7 @@ def aoc():
 def parse_cmd_line_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('day', type=int, choices=range(1, 25+1), help="Advent day (1-25)", metavar='day')
+    parser.add_argument("-v", "--verbose", help="print verbose output", action="store_true")
     part_group = parser.add_mutually_exclusive_group()
     part_group.add_argument("-t", "--test", help="run unit tests", action="store_true")
     part_group.add_argument("-p1", "--part-1-only", help="solve part 1 only", action="store_true")
