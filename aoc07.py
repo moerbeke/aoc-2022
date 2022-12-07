@@ -11,22 +11,6 @@
 from queue import Queue
 
 def solve_1(input_str):
-    '''
-- / (dir)
-  - a (dir)
-    - e (dir)
-      - i (file, size=584)
-    - f (file, size=29116)
-    - g (file, size=2557)
-    - h.lst (file, size=62596)
-  - b.txt (file, size=14848514)
-  - c.dat (file, size=8504156)
-  - d (dir)
-    - j (file, size=4060174)
-    - d.log (file, size=8033020)
-    - d.ext (file, size=5626152)
-    - k (file, size=7214296)
-    '''
     tree = parse_input(input_str)
     print_tree(tree['/'])
     limit_sizes = 0
@@ -38,7 +22,17 @@ def solve_1(input_str):
     return limit_sizes
 
 def solve_2(input_str):
-    return None
+    tree = parse_input(input_str)
+    total_space = 70000000
+    required_free_space = 30000000
+    root = '/'
+    used_space = tree[root].get_size()
+    assert(used_space <= total_space)
+    unused_space = total_space - used_space
+    assert(unused_space < required_free_space)
+    space_to_delete = required_free_space - unused_space
+    dir_sizes = [d.get_size() for d in tree.values()]
+    return min([d for d in dir_sizes if d >= space_to_delete])
 
 def parse_input(input_str):
     '''
@@ -124,9 +118,25 @@ class Directory:
         self.files[filename] = size
 
 def print_tree(node, indent=0):
-    print(' '*indent + node.name)
+    '''
+- / (dir)
+  - a (dir)
+    - e (dir)
+      - i (file, size=584)
+    - f (file, size=29116)
+    - g (file, size=2557)
+    - h.lst (file, size=62596)
+  - b.txt (file, size=14848514)
+  - c.dat (file, size=8504156)
+  - d (dir)
+    - j (file, size=4060174)
+    - d.log (file, size=8033020)
+    - d.ext (file, size=5626152)
+    - k (file, size=7214296)
+    '''
+    print(' '*indent + '- ' + node.name + " (dir)")
     for child in node.children:
         print_tree(child, indent+2)
     for filename in node.files:
-        print(' '*(indent+2) + filename + " %d" % node.files[filename])
+        print(' '*(indent+2) + '- ' + filename + " (filename, size=%d)" % node.files[filename])
     
