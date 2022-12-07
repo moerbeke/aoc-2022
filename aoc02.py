@@ -102,3 +102,40 @@ def solve_2(input_str):
         round_my_score = compute_2_round(opponent_play, my_play)
         my_score += round_my_score
     return my_score
+
+########################################################################
+# Test class
+########################################################################
+
+import unittest
+
+class TestAoc(unittest.TestCase):
+
+    def setUp(self):
+        self.tc_1 = [
+                (
+"""
+A Y
+B X
+C Z
+""", 15),
+                ]
+        self.tc_2 = [
+                (
+"""
+A Y
+B X
+C Z
+""", 12),
+                ]
+
+    def tearDown(self):
+        pass
+
+    def test_solve_1(self):
+        for t in self.tc_1:
+            self.assertEqual(solve_1(t[0]), t[1])
+
+    def test_solve_2(self):
+        for t in self.tc_2:
+            self.assertEqual(solve_2(t[0]), t[1])

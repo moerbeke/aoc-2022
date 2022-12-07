@@ -40,3 +40,64 @@ def solve_2(input_str):
             calories = 0
     max_calories = sum(list(reversed(sorted(elf_calories)))[0:3])
     return max_calories
+
+########################################################################
+# Test class
+########################################################################
+
+import unittest
+
+class TestAoc(unittest.TestCase):
+
+    def setUp(self):
+        self.tc_1 = [
+                (
+"""
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+
+""", 24000),
+                ]
+        self.tc_2 = [
+                (
+"""
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000
+
+""", 45000),
+                ]
+
+    def tearDown(self):
+        pass
+
+    def test_solve_1(self):
+        for t in self.tc_1:
+            self.assertEqual(solve_1(t[0]), t[1])
+
+    def test_solve_2(self):
+        for t in self.tc_2:
+            self.assertEqual(solve_2(t[0]), t[1])

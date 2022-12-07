@@ -49,3 +49,46 @@ def solve_2(input_str):
             break
         priosum += priority[item]
     return priosum
+
+########################################################################
+# Test class
+########################################################################
+
+import unittest
+
+class TestAoc(unittest.TestCase):
+
+    def setUp(self):
+        self.tc_1 = [
+                (
+"""
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw
+""", 157),
+                ]
+        self.tc_2 = [
+                (
+"""
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw
+""", 70),
+                ]
+
+    def tearDown(self):
+        pass
+
+    def test_solve_1(self):
+        for t in self.tc_1:
+            self.assertEqual(solve_1(t[0]), t[1])
+
+    def test_solve_2(self):
+        for t in self.tc_2:
+            self.assertEqual(solve_2(t[0]), t[1])

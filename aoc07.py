@@ -140,3 +140,84 @@ def print_tree(node, indent=0):
     for filename in node.files:
         print(' '*(indent+2) + '- ' + filename + " (filename, size=%d)" % node.files[filename])
     
+########################################################################
+# Test class
+########################################################################
+
+import unittest
+
+class TestAoc(unittest.TestCase):
+
+    def setUp(self):
+        self.tc_1 = [
+                (
+"""
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k
+""", 95437),
+                ]
+        self.tc_2 = [
+                (
+"""
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k
+""", 24933642),
+                ]
+
+    def tearDown(self):
+        pass
+
+    def test_solve_1(self):
+        for t in self.tc_1:
+            self.assertEqual(solve_1(t[0]), t[1])
+
+    def test_solve_2(self):
+        for t in self.tc_2:
+            self.assertEqual(solve_2(t[0]), t[1])
+
+    def test_dir_size(self):
+        t = self.tc_2[0][0]
+        tree = parse_input(t)
+        self.assertEqual(tree['/'].get_size(), 48381165)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 ########################################################################
-# Advent of Code 2022 - solver
+# Advent of Code 2015 - solver
 #
 # Copyright (C) 2022 Antonio Ceballos Roa
 ########################################################################
@@ -15,6 +15,7 @@ import unittest
 ########################################################################
 
 def aoc():
+    global daysolver
     year = 2022
     args = parse_cmd_line_args()
     print("\n===== AoC-%d day #%d =====\n" % (year, args.day))
@@ -63,10 +64,8 @@ def suite(TestClass):
     return test_suite
 
 def run_test(day, daysolver):
-    testaoc = importlib.import_module('test_aoc' + day)
-    testaoc.daysolver = daysolver
     aoc_test_suite = unittest.TestSuite()
-    aoc_test_suite.addTest(unittest.makeSuite(testaoc.TestAoc))
+    aoc_test_suite.addTest(unittest.makeSuite(daysolver.TestAoc))
     runner = unittest.TextTestRunner()
     runner.run(aoc_test_suite)
 
