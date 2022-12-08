@@ -98,39 +98,40 @@ def highest_scenic_score(trees, nx, ny):
     scenic_scores = list()
     for x in range(1,nx-1):
         for y in range(1,ny-1):
-            sp = P(x,y)
-            sh = trees[sp]
-            score = 1
-            score_dir = 0
-            for i in range(x+1, nx):
-                h = trees[P(i,sp.y)]
-                score_dir += 1
-                if h >= sh:
-                    break
-            score *= score_dir
-            score_dir = 0
-            for i in range(x-1, -1, -1):
-                h = trees[P(i,sp.y)]
-                score_dir += 1
-                if h >= sh:
-                    break
-            score *= score_dir
-            score_dir = 0
-            for j in range(y+1, ny):
-                h = trees[P(sp.x,j)]
-                score_dir += 1
-                if h >= sh:
-                    break
-            score *= score_dir
-            score_dir = 0
-            for j in range(y-1, -1, -1):
-                h = trees[P(sp.x,j)]
-                score_dir += 1
-                if h >= sh:
-                    break
-            score *= score_dir
-            scenic_scores.append(score)
+            scenic_scores.append(scenic_score(trees, nx, ny, P(x,y)))
     return scenic_scores
+
+def scenic_score(trees, nx, ny, p):
+    return (
+            count_visible_trees(trees, nx, ny, p, P(p.x+1,p.y), P(nx,p.y+1)) *
+            count_visible_trees(trees, nx, ny, p, P(p.x-1,p.y), P(-1,p.y+1)) *
+            count_visible_trees(trees, nx, ny, p, P(p.x,p.y+1), P(p.x+1,ny)) *
+            count_visible_trees(trees, nx, ny, p, P(p.x,p.y-1), P(p.x+1,-1))
+            )
+
+def count_visible_trees(trees, nx, ny, p, p1, p2):
+    sh = trees[p]
+    count = 0
+    tall_found = False
+    for x in range(p1.x, p2.x, sign(p2.x-p1.x)):
+        for y in range(p1.y, p2.y, sign(p2.y-p1.y)):
+            h = trees[P(x,y)]
+            count += 1
+            if h >= sh:
+                tall_found = True
+                break
+        if tall_found:
+            break
+    return count
+
+def sign(x):
+    if x > 0:
+        s = 1
+    elif x < 0:
+        s = -1
+    else:
+        s = 0
+    return s
 
 ########################################################################
 # Test class
