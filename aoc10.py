@@ -14,15 +14,21 @@ def solve_1(input_str):
     return compute_signal_strength(program, cycles)
 
 def solve_2(input_str):
-    return None
+    program = parse_input(input_str)
+    return draw_crt(program)
 
 def parse_input(input_str):
     return input_str.strip().split('\n')
 
 def compute_signal_strength(program, cycles):
     cpu = Cpu()
-    cpu.run(program, cycles)
+    cpu.run_strength(program, cycles)
     return cpu.get_signal_strength()
+
+def draw_crt(program):
+    cpu = Cpu()
+    cpu.run_crt(program)
+    return cpu.draw_crt()
 
 class Cpu:
 
@@ -34,7 +40,7 @@ class Cpu:
         self.instruction_in_cpu = None
         self.instruction_time_in_cpu = 0
 
-    def run(self, program, cycles):
+    def run_strength(self, program, cycles):
         self.program = program
         t = 1
         while t <= cycles[-1]:
@@ -47,6 +53,37 @@ class Cpu:
             self.instruction_time_in_cpu += 1
             self.run_instruction()
             t += 1
+
+    def run_crt(self, program):
+        self.program = program
+        self.crt_x = 40
+        self.crt_y = 6
+        self.crt = ''
+        for t in range(1, self.crt_x * self.crt_y+1):
+            print(t,self.x)
+            if self.instruction_in_cpu is None:
+                self.load_next_instruction()
+            self.instruction_time_in_cpu += 1
+            self.update_crt(t)
+            self.run_instruction()
+
+    def update_crt(self, t):
+        x = (t - 1) % self.crt_x
+        if x in [self.x-1, self.x, self.x+1]:
+            self.crt += '#'
+        else:
+            self.crt += "."
+
+    def draw_crt(self):
+        printable = "\n"
+        i = 0
+        for y in range(self.crt_y):
+            for x in range(self.crt_x):
+                printable += self.crt[i]
+                i += 1
+            printable += "\n"
+        print(printable)
+        return printable
 
     def run_instruction(self):
         assert(self.instruction_in_cpu is not None)
