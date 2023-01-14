@@ -1,7 +1,7 @@
 ########################################################################
 # Advent of Code 2022 - solver
 #
-# Copyright (C) 2022 Antonio Ceballos Roa
+# Copyright (C) 2022-2023 Antonio Ceballos Roa
 ########################################################################
 
 ########################################################################
@@ -13,8 +13,9 @@ def solve_1(input_str):
     return compute_monkey_business(monkeys, n_turns=20)
 
 def solve_2(input_str):
+    Monkey.reset()
     monkeys = parse_input(input_str)
-    return None
+    return compute_monkey_business(monkeys, n_turns=10000, relief=False)
 
 def parse_input(input_str):
     '''
@@ -73,6 +74,10 @@ class Monkey:
     PROD = '*'
     ops = [SUM, PROD]
     OLD = 'old'
+    mcm = 1
+
+    def reset():
+        Monkey.mcm = 1
 
     def __init__(self, n, starting_items, op_arg, test_divisor, test_true, test_false):
         self.id = n
@@ -87,6 +92,8 @@ class Monkey:
         self.test_true = test_true
         self.test_false = test_false
         self.inspected_times = 0
+        Monkey.mcm *= self.test_divisor
+        print(Monkey.mcm)
 
     def play(self, relief=True):
         throws = list()
@@ -94,8 +101,6 @@ class Monkey:
             worry_level = self.compute_worry_level(item)
             self.inspected_times += 1
             if relief:
-                worry_level //= 3
-            else:
                 worry_level //= 3
             if self.test_worry_level(worry_level):
                 throw_to = self.test_true
@@ -122,7 +127,7 @@ class Monkey:
         return worry_level % self.test_divisor == 0
 
     def recv(self, item):
-        self.items.append(item)
+        self.items.append(item % Monkey.mcm)
 
 ########################################################################
 # Test class
