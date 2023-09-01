@@ -21,7 +21,6 @@ def solve_2(input_str):
     while c.can_accept_sand():
         #print(c)
         c.step()
-        #time.sleep(.01)
     print(c)
     return c.sand_units_count()
 
@@ -102,29 +101,24 @@ class Cave:
         return can_move
 
     def _try_down(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0, y0+1
-        if self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
-            can_move = True
-        return can_move
+        return self._try_p(target_p)
 
     def _try_left(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0-1, y0+1
-        if target_p not in self._map.keys() or self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
-            can_move = True
-        return can_move
+        return self._try_p(target_p)
 
     def _try_right(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0+1, y0+1
-        if target_p not in self._map.keys() or self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
+        return self._try_p(target_p)
+
+    def _try_p(self, p):
+        can_move = False
+        if p not in self._map.keys() or self._map[p] == AIR:
+            self._sand_unit_p = p
             can_move = True
         return can_move
 
@@ -197,32 +191,25 @@ class ExtendedCave:
         return can_move
 
     def _try_down(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0, y0+1
-        self._explore(target_p)
-        if self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
-            can_move = True
-        return can_move
+        return self._try_p(target_p)
 
     def _try_left(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0-1, y0+1
-        self._explore(target_p)
-        if self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
-            can_move = True
-        return can_move
+        return self._try_p(target_p)
 
     def _try_right(self):
-        can_move = False
         x0, y0 = self._sand_unit_p
         target_p = x0+1, y0+1
-        self._explore(target_p)
-        if self._map[target_p] == AIR:
-            self._sand_unit_p = target_p
+        return self._try_p(target_p)
+
+    def _try_p(self, p):
+        can_move = False
+        self._explore(p)
+        if self._map[p] == AIR:
+            self._sand_unit_p = p
             can_move = True
         return can_move
 
