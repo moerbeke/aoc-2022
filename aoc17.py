@@ -421,66 +421,10 @@ next_pos = next_pos_candidate
     next_pos = cur_pos
     last_pos = (CHAMBER_WIDTH-1,0)
     while next_pos != last_pos:
-        scanned_pos = None
-        next_pos_candidate = None
-        next_dir_candidate = None
-        scanned_pos_empty = False
-        for d in get_dir_to_scan_cw(cur_dir):
-            scanned_pos = get_next_pos(cur_pos, d)
-            x, y = scanned_pos
-            if y < 0:
-                scanned_pos_empty = False
-                break
-            elif 0 <= x < CHAMBER_WIDTH:
-                if not is_corner_empty(cur_pos, scanned_pos, d):
-                    scanned_pos_empty = False
-                    break
-                elif y == 0:
-                    scanned_pos_empty = True
-                    next_pos_candidate = scanned_pos
-                    next_dir_candidate = d
-                elif y > 0:
-                    cy = g_chamber_height - y
-                    if cy < 0 or g_chamber[(x,cy)] != EMPTY_SPACE:
-                        scanned_pos_empty = False
-                        break
-                    else:
-                        scanned_pos_empty = True
-                        next_pos_candidate = scanned_pos
-                        next_dir_candidate = d
-            else:
-                scanned_pos_empty = False
-                break
+        next_pos_candidate, next_dir_candidate = get_next_candidate_cw(cur_pos, cur_dir)
         if next_pos_candidate is None:
-            scanned_pos = None
-            next_pos_candidate = None
-            next_dir_candidate = None
-            scanned_pos_empty = False
-            for d in get_dir_to_scan_ccw(cur_dir):
-                scanned_pos = get_next_pos(cur_pos, d)
-                x, y = scanned_pos
-                if y < 0:
-                    scanned_pos_empty = False
-                elif 0 <= x < CHAMBER_WIDTH:
-                    if not is_corner_empty(cur_pos, scanned_pos, d):
-                        scanned_pos_empty = False
-                    elif y == 0:
-                        scanned_pos_empty = True
-                        next_pos_candidate = scanned_pos
-                        next_dir_candidate = d
-                        break
-                    elif y > 0:
-                        cy = g_chamber_height - y
-                        if cy < 0 or g_chamber[(x,cy)] != EMPTY_SPACE:
-                            scanned_pos_empty = False
-                        else:
-                            scanned_pos_empty = True
-                            next_pos_candidate = scanned_pos
-                            next_dir_candidate = d
-                            break
-                else:
-                    scanned_pos_empty = False
-            assert(next_pos_candidate is not None)
+            next_pos_candidate, next_dir_candidate = get_next_candidate_ccw(cur_pos, cur_dir)
+        assert(next_pos_candidate is not None)
         next_pos = next_pos_candidate
         next_dir = next_dir_candidate
         skyline += '  ' + get_pos_str(next_pos)
@@ -540,8 +484,71 @@ def is_corner_empty(p1, p2, d):
         corner_empty = (g_chamber[(x1,cy2)] == EMPTY_SPACE)
     else:
         corner_empty = True
-    #corner_empty = (g_chamber[(x2,y1)] == EMPTY_SPACE) or (g_chamber[(x1,y2)] == EMPTY_SPACE)
     return corner_empty
+
+def get_next_candidate_cw(cur_pos, cur_dir):
+    scanned_pos = None
+    next_pos_candidate = None
+    next_dir_candidate = None
+    scanned_pos_empty = False
+    for d in get_dir_to_scan_cw(cur_dir):
+        scanned_pos = get_next_pos(cur_pos, d)
+        x, y = scanned_pos
+        if y < 0:
+            scanned_pos_empty = False
+            break
+        elif 0 <= x < CHAMBER_WIDTH:
+            if not is_corner_empty(cur_pos, scanned_pos, d):
+                scanned_pos_empty = False
+                break
+            elif y == 0:
+                scanned_pos_empty = True
+                next_pos_candidate = scanned_pos
+                next_dir_candidate = d
+            elif y > 0:
+                cy = g_chamber_height - y
+                if cy < 0 or g_chamber[(x,cy)] != EMPTY_SPACE:
+                    scanned_pos_empty = False
+                    break
+                else:
+                    scanned_pos_empty = True
+                    next_pos_candidate = scanned_pos
+                    next_dir_candidate = d
+        else:
+            scanned_pos_empty = False
+            break
+    return next_pos_candidate, next_dir_candidate
+
+def get_next_candidate_ccw(cur_pos, cur_dir):
+    scanned_pos = None
+    next_pos_candidate = None
+    next_dir_candidate = None
+    scanned_pos_empty = False
+    for d in get_dir_to_scan_ccw(cur_dir):
+        scanned_pos = get_next_pos(cur_pos, d)
+        x, y = scanned_pos
+        if y < 0:
+            scanned_pos_empty = False
+        elif 0 <= x < CHAMBER_WIDTH:
+            if not is_corner_empty(cur_pos, scanned_pos, d):
+                scanned_pos_empty = False
+            elif y == 0:
+                scanned_pos_empty = True
+                next_pos_candidate = scanned_pos
+                next_dir_candidate = d
+                break
+            elif y > 0:
+                cy = g_chamber_height - y
+                if cy < 0 or g_chamber[(x,cy)] != EMPTY_SPACE:
+                    scanned_pos_empty = False
+                else:
+                    scanned_pos_empty = True
+                    next_pos_candidate = scanned_pos
+                    next_dir_candidate = d
+                    break
+        else:
+            scanned_pos_empty = False
+    return next_pos_candidate, next_dir_candidate
 
 ########################################################################
 # Test class
