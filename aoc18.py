@@ -9,8 +9,35 @@
 ########################################################################
 
 
+import sys
+sys.setrecursionlimit(6000)
+
 def solve_1(input_str):
     cubes = parse_input(input_str)
+    n_surface_sides = count_sides(cubes)
+    return n_surface_sides
+
+def solve_2(input_str):
+    """
+    Count surface sides
+    Count air pockets
+    Count sides of air pockets
+    Exterior sides = surface sides - sides of air pockets
+    """
+    cubes = parse_input(input_str)
+    n_surface_sides = count_sides(cubes)
+    air_pockets = compute_air_pockets([cube.centre for cube in cubes])
+    n_air_pocket_sides = count_sides(air_pockets)
+    return n_surface_sides - n_air_pocket_sides
+
+def parse_input(input_str):
+    cubes = []
+    for line in input_str.strip().split('\n'):
+        x,y,z = [int(n) for n in line.split(',')]
+        cubes.append(Cube((x,y,z)))
+    return(cubes)
+
+def count_sides(cubes):
     all_sides = []
     common_sides = []
     for cube in cubes:
@@ -22,15 +49,60 @@ def solve_1(input_str):
                 all_sides.append(side)
     return len(all_sides) - len(common_sides)
 
-def solve_2(input_str):
-    return None
+AIR = '.'
+AIR = '.'
+STEAM = '~'
+LAVA = '#'
 
-def parse_input(input_str):
-    cubes = []
-    for line in input_str.strip().split('\n'):
-        x,y,z = [int(n) for n in line.split(',')]
-        cubes.append(Cube((x,y,z)))
-    return(cubes)
+cells = {}
+
+def compute_air_pockets(cube_centres):
+    global min_x
+    global max_x
+    global min_y
+    global max_y
+    global min_z
+    global max_z
+    min_x = min([x for (x,y,z) in cube_centres]) - 1
+    max_x = max([x for (x,y,z) in cube_centres]) + 1
+    min_y = min([y for (x,y,z) in cube_centres]) - 1
+    max_y = max([y for (x,y,z) in cube_centres]) + 1
+    min_z = min([z for (x,y,z) in cube_centres]) - 1
+    max_z = max([z for (x,y,z) in cube_centres]) + 1
+    for x in range(min_x, max_x+1):
+        for y in range(min_y, max_y+1):
+            for z in range(min_z, max_z+1):
+                if (x,y,z) in cube_centres:
+                    cells[(x,y,z)] = LAVA
+                else:
+                    cells[(x,y,z)] = AIR
+    propagate_steam(0, 0, 0)
+    air_pockets = []
+    printable = ""
+    for p in cells:
+        if cells[p] == AIR:
+            printable += " " + str(p)
+            air_pockets.append(Cube(p))
+    verboseprint(printable)
+    verboseprint(cells)
+    return air_pockets
+
+def propagate_steam(x0, y0, z0):
+    verboseprint("Propagate from %s" % str((x0,y0,z0)))
+    if cells[(x0,y0,z0)] == AIR:
+        cells[(x0,y0,z0)] = STEAM
+    else: 
+        return
+    ps = []
+    ps += [(x0+i,y0,z0) for i in [-1,+1]]
+    ps += [(x0,y0+i,z0) for i in [-1,+1]]
+    ps += [(x0,y0,z0+i) for i in [-1,+1]]
+    verboseprint("Propagate:", ps)
+    for (x,y,z) in ps:
+        if min_x <= x <= max_x and min_y <= y <= max_y and min_z <= z <= max_z:
+            if  cells[(x,y,z)] == AIR:
+                verboseprint("Steam to %s" % str((x,y,z)))
+                propagate_steam(x, y, z)
 
 class Cube:
     """
@@ -98,6 +170,10 @@ class Cube:
         return side in self._sides
 
     @property
+    def centre(self):
+        return self._centre
+
+    @property
     def sides(self):
         return self._sides
 
@@ -136,7 +212,49 @@ class TestAoc(unittest.TestCase):
         self.tc_2 = [
                 (
 """
-""", None),
+1,1,1
+1,1,2
+1,1,3
+1,2,1
+1,2,2
+1,2,3
+1,3,1
+1,3,2
+1,3,3
+2,1,1
+2,1,2
+2,1,3
+2,2,1
+2,2,3
+2,3,1
+2,3,2
+2,3,3
+3,1,1
+3,1,2
+3,1,3
+3,2,1
+3,2,2
+3,2,3
+3,3,1
+3,3,2
+3,3,3
+""", 54),
+                (
+"""
+2,2,2
+1,2,2
+3,2,2
+2,1,2
+2,3,2
+2,2,1
+2,2,3
+2,2,4
+2,2,6
+1,2,5
+3,2,5
+2,1,5
+2,3,5
+""", 58),
                 ]
 
     def tearDown(self):
